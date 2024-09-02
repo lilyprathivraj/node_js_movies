@@ -33,14 +33,21 @@ app.get('/movies/', async (request, response) => {
     from movie
   `
   const dbResponse = await db.all(getMovieNameQuery)
-  response.send(dbResponse)
+
+  const snakeToCamel = eachItem => {
+    return {
+      movieName: eachItem.movie_name,
+    }
+  }
+
+  response.send(dbResponse.map(eachItem => snakeToCamel(eachItem)))
 })
 
 //API for creating new movie
 app.post('/movies/', async (request, response) => {
-  const movieDetails = request.body
   console.log(request.body)
-  const {directorId, movieName, leadActor} = movieDetails
+  //const {directorId, movieName, leadActor} = request.body
+  const {directorId, movieName, leadActor} = request.body
 
   const addMovieQuery = `
     insert into 
