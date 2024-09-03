@@ -1,7 +1,7 @@
 
 GET http://localhost:3000/movies/
 
-###
+###1
 
 POST http://localhost:3000/movies/
 Content-Type:application/json
@@ -12,11 +12,11 @@ Content-Type:application/json
   "leadActor": "Jeff Goldblum"
 }
 
-###
+###2
 
-GET http://localhost:3000/movies/1/
+GET http://localhost:3000/movies/7/
 
-###
+###3
 PUT http://localhost:3000/movies/1/
 Content-Type : application/json
 
@@ -26,13 +26,13 @@ Content-Type : application/json
   "leadActor": "Christopher Hemsworth"
 }
 
-###
+###4
 DELETE http://localhost:3000/movies/1/
 
-###
+###5
 GET http://localhost:3000/directors/
 
-###
-GET http://localhost:3000/directors/5/movies/
+###6
+GET http://localhost:3000/directors/3/movies/
 
-###
+###7

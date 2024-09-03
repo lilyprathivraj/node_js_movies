@@ -4,6 +4,7 @@ const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
 
 const app = express()
+app.use(express.json())
 
 const dbPath = path.join(__dirname, 'moviesData.db')
 let db = null
@@ -46,14 +47,13 @@ app.get('/movies/', async (request, response) => {
 //API2 for creating new movie
 app.post('/movies/', async (request, response) => {
   console.log(request.body)
-  //ERROR : request.body undefined
   const {directorId, movieName, leadActor} = request.body
 
   const addMovieQuery = `
     insert into 
       movie(director_id, movie_name, lead_actor)
     values 
-      ('${directorId}', '${movieName}', '${leadActor}',)
+      ('${directorId}', '${movieName}', '${leadActor}')
   `
 
   const dbResponse = await db.run(addMovieQuery)
@@ -64,9 +64,8 @@ app.post('/movies/', async (request, response) => {
 //API3 for getting movie details
 app.get('/movies/:movieId/', async (request, response) => {
   const movieId = request.params
-  // ERROR : dbResponse undefined
   const movieDetailsQuery = `
-    SELECT movie_id, director_id, movie_name, lead_actor
+    SELECT *
     FROM movie
     WHERE movie_id = '${movieId}'
     `
@@ -86,16 +85,16 @@ app.get('/movies/:movieId/', async (request, response) => {
 
 //API4 for changing movie details
 app.put('/movies/:movieId/', async (request, response) => {
-  console.log(request.params, request.body)
-  // ERROR : request.body undefined
   const movieId = request.params
   const {directorId, movieName, leadActor} = request.body
   const updateMovieQuery = `
     UPDATE movie
     SET 
-      director_id = '${directorId},
+      movie_id = '${movieId}',
+      director_id = '${directorId}',
       movie_name = '${movieName}',
-      lead_actor = '${leadActor}',
+      lead_actor = '${leadActor}'
+    WHERE movie_id = '${movieId}'
   `
   await db.run(updateMovieQuery)
   response.send('Movie Detials Updated')
