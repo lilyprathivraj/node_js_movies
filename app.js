@@ -84,6 +84,7 @@ app.get('/movies/:movieId/', async (request, response) => {
 })
 
 //API4 for changing movie details
+//Error : database not update
 app.put('/movies/:movieId/', async (request, response) => {
   const movieId = request.params
   const {directorId, movieName, leadActor} = request.body
@@ -94,13 +95,15 @@ app.put('/movies/:movieId/', async (request, response) => {
       director_id = '${directorId}',
       movie_name = '${movieName}',
       lead_actor = '${leadActor}'
+
     WHERE movie_id = '${movieId}'
   `
   await db.run(updateMovieQuery)
-  response.send('Movie Detials Updated')
+  response.send('Movie Details Updated')
 })
 
 //API5 for deleting movie
+//Error: database not update
 app.delete('/movies/:movieId/', async (request, response) => {
   const movieId = request.params
   const movieDeleteQuery = `
@@ -146,3 +149,5 @@ app.get('/directors/:directorId/movies/', async (request, response) => {
   const moviesName = dbResponse.map(eachItem => snakeToCamel(eachItem))
   response.send(moviesName)
 })
+
+module.exports = app
