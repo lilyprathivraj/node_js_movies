@@ -63,11 +63,11 @@ app.post('/movies/', async (request, response) => {
 
 //API3 for getting movie details
 app.get('/movies/:movieId/', async (request, response) => {
-  const movieId = request.params
+  const {movieId} = request.params
   const movieDetailsQuery = `
     SELECT *
     FROM movie
-    WHERE movie_id = '${movieId}'
+    WHERE movie_id='${movieId}';
     `
   const snakeToCamel = movieDetails => {
     return {
@@ -78,37 +78,35 @@ app.get('/movies/:movieId/', async (request, response) => {
     }
   }
 
-  const dbResponse = await db.all(movieDetailsQuery)
-  console.log(dbResponse)
+  const dbResponse = await db.get(movieDetailsQuery)
   response.send(snakeToCamel(dbResponse))
 })
 
 //API4 for changing movie details
-//Error : database not update
 app.put('/movies/:movieId/', async (request, response) => {
-  const movieId = request.params
+  const {movieId} = request.params
   const {directorId, movieName, leadActor} = request.body
   const updateMovieQuery = `
     UPDATE movie
     SET 
-      movie_id = '${movieId}',
-      director_id = '${directorId}',
+      movie_id = ${movieId},
+      director_id = ${directorId},
       movie_name = '${movieName}',
       lead_actor = '${leadActor}'
 
-    WHERE movie_id = '${movieId}'
+    WHERE movie_id = ${movieId}
+
   `
-  await db.run(updateMovieQuery)
+  await db.get(updateMovieQuery)
   response.send('Movie Details Updated')
 })
 
 //API5 for deleting movie
-//Error: database not update
 app.delete('/movies/:movieId/', async (request, response) => {
-  const movieId = request.params
+  const {movieId} = request.params
   const movieDeleteQuery = `
     DELETE FROM movie
-    WHERE movie_id = '${movieId}'
+    WHERE movie_id=${movieId};
   `
   await db.run(movieDeleteQuery)
   response.send('Movie Removed')
@@ -132,11 +130,11 @@ app.get('/directors/', async (request, response) => {
 
 //API7 for getting movieName by directorId
 app.get('/directors/:directorId/movies/', async (request, response) => {
-  const directorId = request.params
-  // ERROR : Empty Query result
+  const {directorId} = request.params
   const moviesNameQuery = `
-  SELECT movie_name FROM movie
-  WHERE director_id = '${directorId}'
+  SELECT movie_name 
+  FROM movie
+  where director_id=${directorId};
   `
   const snakeToCamel = movieName => {
     return {
